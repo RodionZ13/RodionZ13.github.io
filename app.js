@@ -274,6 +274,17 @@
   $('#steps-list').innerHTML = S.steps.map(([t, d], i) =>
     `<li><span class="num">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></li>`).join('');
 
+  // ---------- своё производство: фото цеха и цифры ----------
+  const PROD = S.production;
+  if (PROD) {
+    $('#prod-grid').innerHTML = PROD.photos.map(([t, sub, img, pos]) => `
+    <figure class="prod-ph">
+      <img src="${esc(img)}" alt="${esc(t)}" loading="lazy" decoding="async"${pos ? ` style="object-position:${esc(pos)}"` : ''}>
+      <figcaption>${t}<small>${sub}</small></figcaption>
+    </figure>`).join('');
+    $('#prod-facts').innerHTML = PROD.facts.map(([b, t]) => `<div><b>${b}</b><span>${t}</span></div>`).join('');
+  } else $('#production').remove();
+
   // ---------- объекты, отзывы, вопросы ----------
   // четвёртое поле (необязательно) — какую часть фото показывать при обрезке до 4:3, например '50% 60%'
   $('#gallery-grid').innerHTML = S.gallery.map(([t, place, img, pos]) => `

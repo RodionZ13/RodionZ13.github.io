@@ -342,6 +342,22 @@ h2 { margin-top: 12px; font-size: 46px; font-weight: 700; line-height: 1.08; let
 .steps h3 { margin: 16px 0 8px; font-size: 20px; }
 .steps p { font-size: 15.5px; color: var(--muted); }
 
+/* ---------- своё производство ---------- */
+/* первое фото — большое слева на два ряда, последнее — широкое снизу */
+.prod-grid { display: grid; grid-template-columns: 1.35fr 1fr 1fr; grid-template-rows: 250px 230px; gap: 14px; }
+.prod-ph { position: relative; overflow: hidden; border-radius: var(--r); background: #2a2019; }
+.prod-ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.92) sepia(.06); }
+.prod-ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(14, 9, 5, .82)); }
+.prod-ph figcaption { position: absolute; left: 18px; right: 18px; bottom: 15px; z-index: 1; font-size: 15.5px; font-weight: 600; line-height: 1.3; color: #FFF8EE; }
+.prod-ph figcaption small { display: block; font-size: 13px; font-weight: 500; color: rgba(255, 248, 238, .78); }
+.prod-ph:first-child { grid-row: span 2; }
+.prod-ph:last-child { grid-column: span 2; }
+.prod-facts { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 14px; border-radius: var(--r); background: var(--char-2); border: 1px solid var(--line-dark); }
+.prod-facts div { padding: 22px 26px; border-left: 1px solid var(--line-dark); }
+.prod-facts div:first-child { border-left: 0; }
+.prod-facts b { display: block; font-size: 28px; font-weight: 750; letter-spacing: -.02em; line-height: 1.15; color: var(--amber-2); white-space: nowrap; }
+.prod-facts span { display: block; margin-top: 6px; font-size: 14px; line-height: 1.4; color: var(--on-dark-muted); }
+
 /* ---------- объекты ---------- */
 .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .ph {
@@ -537,6 +553,13 @@ footer .logo { color: var(--on-dark); }
   .gallery, .reviews { grid-template-columns: repeat(2, 1fr); }
   /* в две колонки нечётное последнее фото — на всю ширину, без пустой клетки */
   .gallery .ph:last-child:nth-child(odd) { grid-column: 1 / -1; aspect-ratio: 2 / 1; }
+  /* производство на планшете: большое и широкое фото — на всю ширину, два средних рядом */
+  .prod-grid { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
+  .prod-ph { aspect-ratio: 4 / 3; }
+  .prod-ph:first-child, .prod-ph:last-child { grid-row: auto; grid-column: 1 / -1; aspect-ratio: 2 / 1; }
+  .prod-facts { grid-template-columns: 1fr 1fr; }
+  .prod-facts div:nth-child(3) { border-left: 0; }
+  .prod-facts div:nth-child(n+3) { border-top: 1px solid var(--line-dark); }
   .custom, .stages, .deal { grid-template-columns: 1fr; }
   .stages, .deal { gap: 28px; }
   .custom-art { min-height: 440px; }
@@ -560,6 +583,11 @@ footer .logo { color: var(--on-dark); }
   .sec-sub { font-size: 17px; }
   .projects, .steps, .gallery, .reviews, .opts-2 { grid-template-columns: 1fr; }
   .gallery .ph:last-child:nth-child(odd) { aspect-ratio: 4 / 3; }
+  .prod-grid { grid-template-columns: 1fr; gap: 12px; }
+  .prod-ph, .prod-ph:first-child, .prod-ph:last-child { aspect-ratio: 4 / 3; }
+  .prod-facts div { padding: 16px 18px; }
+  .prod-facts b { font-size: 23px; }
+  .prod-facts span { font-size: 13px; }
   .proj-plan { height: 260px; }
   .proj-switch { display: flex; width: 100%; margin-top: -8px; }
   .proj-switch button { flex: 1 1 0; flex-direction: column; align-items: center; gap: 1px; padding: 10px 8px; font-size: 15px; }
