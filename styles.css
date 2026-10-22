@@ -238,7 +238,7 @@ h2 { margin-top: 12px; font-size: 46px; font-weight: 700; line-height: 1.08; let
 .custom-steps li::before { content: counter(step); flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%;
   background: rgba(227, 155, 76, .16); color: var(--amber); font-weight: 700; }
 .custom-steps b { display: block; font-size: 17px; }
-.custom-steps span { font-size: 14.5px; color: var(--on-dark-muted); }
+.custom-steps .cs-note { font-size: 14.5px; color: var(--on-dark-muted); }
 .custom-cta { display: flex; flex-wrap: wrap; gap: 12px; }
 .custom-free { margin-top: 16px; font-size: 14px; color: var(--on-dark-muted); }
 /* схема участка на «миллиметровке» */
@@ -812,7 +812,7 @@ footer .logo { color: var(--on-dark); }
   .custom-steps li { align-items: center; gap: 12px; }
   .custom-steps li::before { width: 28px; height: 28px; font-size: 14px; }
   .custom-steps b { font-size: 15px; line-height: 1.3; }
-  .custom-steps span { display: none; }   /* на телефоне — только сами шаги, без пояснений */
+  .custom-steps .cs-note { display: none; }   /* на телефоне — только сами шаги, без пояснений */
   .custom-cta { gap: 8px; }
   .custom-cta .btn { height: 46px; font-size: 15.5px; }
   .custom-free { margin-top: 10px; font-size: 12.5px; }
@@ -843,4 +843,6 @@ footer .logo { color: var(--on-dark); }
   .hero-card { display: none; }
   /* шаги индивидуального проекта — в одну строку */
   .custom-steps b { font-size: 14.5px; white-space: nowrap; }
+  /* заголовок: «Не нашли подходящую?» крупно, «Спроектируем под ваш участок» — маленьким подзаголовком в одну строку */
+  .custom-sub { display: block; margin-top: 6px; font-size: clamp(14px, 4.4vw, 16px); font-weight: 600; letter-spacing: 0; line-height: 1.3; white-space: nowrap; color: var(--on-dark-muted); }
 }

@@ -296,7 +296,7 @@
 
   // индивидуальный проект: подпись к схеме — модель с бейджем
   const featured = S.projects.find(p => p.badge) || S.projects[0];
-  $('#custom-steps').innerHTML = S.custom.map(([b, t, short, bShort]) => `<li><div><b>${tx(b, bShort)}</b><span>${tx(t, short)}</span></div></li>`).join('');
+  $('#custom-steps').innerHTML = S.custom.map(([b, t, short, bShort]) => `<li><div><b>${tx(b, bShort)}</b><span class="cs-note">${tx(t, short)}</span></div></li>`).join('');
   $('#custom-tag').textContent = `Пример: модель «${featured.name}» на участке 12 соток`;
 
   // договор: список и образец с ценой и сроком модели с бейджем
