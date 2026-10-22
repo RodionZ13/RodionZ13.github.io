@@ -281,11 +281,6 @@
       ${img ? `<img src="${esc(img)}" alt="${esc(t)}, ${esc(place)}" loading="lazy" decoding="async"${pos ? ` style="object-position:${esc(pos)}"` : ''}>` : `<span class="cam">${ic('camera')}Фото объекта</span>`}
       <figcaption>${t}<small>${place}</small></figcaption>
     </figure>`).join('');
-  if (S.demo) {
-    $('#gallery-sub').textContent = S.gallery.some(g => g[2])
-      ? `В демо-версии — фото с ${S.photoCredit || 'фотостока'}. На вашем сайте здесь будут фото ваших установленных бань.`
-      : 'В демо-версии здесь заглушки. На вашем сайте будут фото ваших установленных бань.';
-  }
   // рейтинг с карт
   $('#ratings').innerHTML = (S.ratings || []).map(r => {
     const count = `${r.count} ${plural(r.count, 'отзыв', 'отзыва', 'отзывов')}`;
