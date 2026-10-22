@@ -114,18 +114,29 @@ i[data-icon] svg { width: 1.2em; height: 1.2em; }
 .hero-bg, .hero-corner { filter: saturate(.92) sepia(.06); }
 .hero-corner { position: absolute; z-index: 3; display: block; }
 /* пар над крышей (рисует app.js): поверх фото и затемнения, под текстом и углом крыши.
-   Маска: у шапки пар еле виден, чтобы меню читалось, а ниже тает к линии крыши. */
-.hero-smoke { position: absolute; z-index: 2; pointer-events: none; left: var(--sl); top: var(--st); width: var(--sw); height: var(--sh);
-  mix-blend-mode: screen; opacity: .85;
-  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.25) 0, rgba(0,0,0,.25) 10%, #000 34%, #000 52%, rgba(0,0,0,.6) 60%, transparent 64%);
-  mask-image: linear-gradient(180deg, rgba(0,0,0,.25) 0, rgba(0,0,0,.25) 10%, #000 34%, #000 52%, rgba(0,0,0,.6) 60%, transparent 64%); }
-.smk { position: absolute; inset: 0; width: 100%; height: 100%; will-change: transform, opacity; animation: smoke-rise 18s linear infinite; }
-.smk-b { animation-delay: -9s; }   /* второй слой на полцикла позже: пока один тает, другой набирает силу */
+   Две маски: по высоте — у шапки пар еле виден, чтобы меню читалось, а ниже тает к линии крыши;
+   по ширине — плавно тает к краям, без резкой границы. */
+.hero-smoke { --fade-x: linear-gradient(90deg, transparent 0, #000 16%, #000 70%, transparent 100%);
+  --fade-y: linear-gradient(180deg, rgba(0,0,0,.25) 0, rgba(0,0,0,.25) 10%, #000 34%, #000 52%, rgba(0,0,0,.6) 60%, transparent 64%);
+  position: absolute; z-index: 2; pointer-events: none; left: var(--sl); top: var(--st); width: var(--sw); height: var(--sh);
+  mix-blend-mode: screen; opacity: .9;
+  -webkit-mask-image: var(--fade-x), var(--fade-y); -webkit-mask-composite: source-in;
+  mask-image: var(--fade-x), var(--fade-y); mask-composite: intersect; }
+/* слой пара: шире области, чтобы при движении его край не попадал в кадр */
+.smk { position: absolute; left: -8%; top: 0; width: 116%; height: 100%; overflow: visible; will-change: transform, opacity;
+  animation: smoke-rise 12s ease-in-out infinite; }
+.smk-b { animation-name: smoke-rise-b; animation-delay: -6s; }   /* второй слой на полцикла позже: пока один тает, другой набирает силу */
 @keyframes smoke-rise {
-  0% { transform: translate3d(0, 5%, 0) scale(1); opacity: 0; }
-  35% { opacity: 1; }
-  65% { opacity: 1; }
-  100% { transform: translate3d(-1.5%, -9%, 0) scale(1.07); opacity: 0; }
+  0% { transform: translate3d(2%, 14%, 0) scale(.96); opacity: 0; }
+  30% { opacity: 1; }
+  70% { opacity: .9; }
+  100% { transform: translate3d(-4%, -20%, 0) scale(1.14); opacity: 0; }
+}
+@keyframes smoke-rise-b {
+  0% { transform: translate3d(-3%, 14%, 0) scale(.98); opacity: 0; }
+  30% { opacity: 1; }
+  70% { opacity: .9; }
+  100% { transform: translate3d(4%, -20%, 0) scale(1.12); opacity: 0; }
 }
 .hero-shade { position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
@@ -542,8 +553,8 @@ footer .logo { color: var(--on-dark); }
      Слой вдвое выше этой линии, а маска гасит всё ниже неё. */
   .hero-smoke { --roof: calc(50cqh + 32px - .3275 * min(120cqh, 110cqw));
     left: -10%; top: 0; width: 120%; height: calc(var(--roof) * 2);
-    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.5) 0, #000 22%, #000 32%, transparent 48%);
-    mask-image: linear-gradient(180deg, rgba(0,0,0,.5) 0, #000 22%, #000 32%, transparent 48%); }
+    --fade-x: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+    --fade-y: linear-gradient(180deg, rgba(0,0,0,.5) 0, #000 22%, #000 32%, transparent 48%); }
   .hero-text, .hero-card, .stats { position: relative; left: auto; right: auto; top: auto; bottom: auto; flex: none; }
   .hero-text { width: auto; margin-top: -6px; padding-left: var(--G); padding-right: var(--GR); }
   .hero .eyebrow { font-size: clamp(11px, 1.6vw, 14px); letter-spacing: .1em; }

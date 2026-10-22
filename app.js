@@ -197,7 +197,7 @@
   }
   const SM = S.heroSmoke;
   const smoke = HI && SM
-    ? `<div class="hero-smoke" aria-hidden="true" style="--sl:${SM.left}%;--st:${SM.top}%;--sw:${SM.width}%;--sh:${SM.height}%">${smokeLayer('a', 23, 0)}${smokeLayer('b', 61, 40)}</div>`
+    ? `<div class="hero-smoke" aria-hidden="true" style="--sl:${SM.left}%;--st:${SM.top}%;--sw:${SM.width}%;--sh:${SM.height}%">${smokeLayer('a', 23, 0)}${smokeLayer('b', 61, -60)}</div>`
     : '';
   $('#hero-photo').innerHTML = HI
     ? `<img class="hero-bg" src="${esc(largest(HI))}" srcset="${srcset(HI)}" sizes="${sizes(1)}" fetchpriority="high" alt="${esc(S.heroAlt || 'Баня компании ' + S.company)}">${smoke}${corner}`
