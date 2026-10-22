@@ -835,4 +835,12 @@ footer .logo { color: var(--on-dark); }
   .stage-list .stage-t { min-height: 2.9em; font-size: 13.5px; color: var(--on-dark); }
   .stage-prog { display: block; height: 6px; margin: 10px 0 4px; border-radius: 999px;
     background: linear-gradient(90deg, var(--amber) var(--paid), rgba(246, 238, 228, .12) var(--paid)); }
+
+  /* рассрочка на телефоне — только в калькуляторе: в карточках моделей и баннером под ними её нет */
+  .proj .inst, .inst-banner { display: none; }
+  .sec-custom { padding-top: 0; }   /* блок идёт сразу за моделями, без двойного отступа */
+  /* первый экран: без карточки модели */
+  .hero-card { display: none; }
+  /* шаги индивидуального проекта — в одну строку */
+  .custom-steps b { font-size: 14.5px; white-space: nowrap; }
 }
