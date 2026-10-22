@@ -49,7 +49,6 @@ i[data-icon] svg { width: 1.2em; height: 1.2em; }
 /* три чёрно-белых значка в ряд на кнопке первого экрана */
 .msg-stack { display: inline-flex; gap: .3em; }
 .msg-stack .brand { font-size: .85em; color: var(--on-dark); }
-.btn-amber .msg-stack .brand { color: var(--amber-ink); }   /* на оранжевой кнопке в шапке — тёмные */
 
 /* ---------- кнопки ---------- */
 .btn {
@@ -608,8 +607,7 @@ footer .logo { color: var(--on-dark); }
   .logo { gap: 10px; }
   .logo-mark { width: 36px; height: 36px; transform: translateY(-4px); }
   .logo b { font-size: 17px; }
-  .top-cta .btn { gap: 6px; padding: 0 12px; }
-  .top-cta .msg-stack { gap: .22em; }
+  .top-cta .btn { padding: 0 16px; }
   .hero-cta { gap: 8px; }
   .hero-cta .btn { gap: 6px; padding: 0 12px; }
   .msg-stack { gap: .22em; }
@@ -620,5 +618,4 @@ footer .logo { color: var(--on-dark); }
 }
 @media (max-width: 350px) {
   .hero-cta .msg-stack { display: none; }
-  .top-cta .msg-label { display: none; }   /* в шапке остаются только значки мессенджеров */
 }
