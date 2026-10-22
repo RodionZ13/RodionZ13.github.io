@@ -48,6 +48,7 @@
   // текст с короткой версией для телефона: на узком экране видна вторая (styles.css, .t-full / .t-short)
   const tx = (full, short) => short ? `<span class="t-full">${full}</span><span class="t-short">${short}</span>` : full;
   if (S.hero.textShort) $('.hero .lead').innerHTML = tx(esc(S.hero.text), esc(S.hero.textShort));
+  if (S.hero.restTail) $('.h1-rest').insertAdjacentHTML('beforeend', ` <span class="h1-tail">${esc(S.hero.restTail)}</span>`);
   document.title = `${S.company} — ${S.tagline.toLowerCase()} в ${S.region}`;
 
   // ---------- мессенджеры ----------

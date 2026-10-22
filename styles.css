@@ -841,6 +841,8 @@ footer .logo { color: var(--on-dark); }
   .sec-custom { padding-top: 0; }   /* блок идёт сразу за моделями, без двойного отступа */
   /* первый экран: без карточки модели */
   .hero-card { display: none; }
+  /* «за один день» — мелким подзаголовком под «баня на вашем участке» */
+  .h1-tail { display: block; margin-top: 4px; font-size: .62em; font-weight: 600; letter-spacing: 0; color: var(--amber); }
   /* шаги индивидуального проекта — в одну строку */
   .custom-steps b { font-size: 14.5px; white-space: nowrap; }
   /* заголовок: «Не нашли подходящую?» крупно, «Спроектируем под ваш участок» — маленьким подзаголовком в одну строку */
