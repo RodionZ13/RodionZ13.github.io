@@ -113,6 +113,20 @@ i[data-icon] svg { width: 1.2em; height: 1.2em; }
 /* фон и угол бани с одинаковой лёгкой тёплой цветокоррекцией, как фото в галерее */
 .hero-bg, .hero-corner { filter: saturate(.92) sepia(.06); }
 .hero-corner { position: absolute; z-index: 3; display: block; }
+/* пар над крышей (рисует app.js): поверх фото и затемнения, под текстом и углом крыши.
+   Маска: у шапки пар еле виден, чтобы меню читалось, а ниже тает к линии крыши. */
+.hero-smoke { position: absolute; z-index: 2; pointer-events: none; left: var(--sl); top: var(--st); width: var(--sw); height: var(--sh);
+  mix-blend-mode: screen; opacity: .85;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.25) 0, rgba(0,0,0,.25) 10%, #000 34%, #000 52%, rgba(0,0,0,.6) 60%, transparent 64%);
+  mask-image: linear-gradient(180deg, rgba(0,0,0,.25) 0, rgba(0,0,0,.25) 10%, #000 34%, #000 52%, rgba(0,0,0,.6) 60%, transparent 64%); }
+.smk { position: absolute; inset: 0; width: 100%; height: 100%; will-change: transform, opacity; animation: smoke-rise 18s linear infinite; }
+.smk-b { animation-delay: -9s; }   /* второй слой на полцикла позже: пока один тает, другой набирает силу */
+@keyframes smoke-rise {
+  0% { transform: translate3d(0, 5%, 0) scale(1); opacity: 0; }
+  35% { opacity: 1; }
+  65% { opacity: 1; }
+  100% { transform: translate3d(-1.5%, -9%, 0) scale(1.07); opacity: 0; }
+}
 .hero-shade { position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
     linear-gradient(90deg, rgba(12, 8, 6, .88) 0, rgba(12, 8, 6, .72) calc(var(--L) + 300 * var(--u)), rgba(12, 8, 6, .3) calc(var(--L) + 455 * var(--u)), transparent calc(var(--L) + 530 * var(--u))),
@@ -495,6 +509,8 @@ footer .logo { color: var(--on-dark); }
   html { scroll-behavior: auto; }
   .btn, .faq summary::after { transition: none; }
   .btn:hover { transform: none; }
+  .smk { animation: none; }   /* без анимаций — один неподвижный слой пара */
+  .smk-b { display: none; }
 }
 
 /* ---------- адаптив ---------- */
@@ -522,6 +538,12 @@ footer .logo { color: var(--on-dark); }
   .hero-bg { --ih: min(120cqh, 110cqw); position: absolute; max-width: none; height: var(--ih); width: calc(var(--ih) * 2.7749);
     left: calc(50cqw - var(--ih) * 1.5184); top: calc(50cqh + 32px - var(--ih) * .5859);
     -webkit-mask-image: none; mask-image: none; }
+  /* пар тает ровно к верху бани: 50cqh + 32px − 0,3275 × высота фото (верх бани — 58,59% − 65,5% / 2 кадра).
+     Слой вдвое выше этой линии, а маска гасит всё ниже неё. */
+  .hero-smoke { --roof: calc(50cqh + 32px - .3275 * min(120cqh, 110cqw));
+    left: -10%; top: 0; width: 120%; height: calc(var(--roof) * 2);
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.5) 0, #000 22%, #000 32%, transparent 48%);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,.5) 0, #000 22%, #000 32%, transparent 48%); }
   .hero-text, .hero-card, .stats { position: relative; left: auto; right: auto; top: auto; bottom: auto; flex: none; }
   .hero-text { width: auto; margin-top: -6px; padding-left: var(--G); padding-right: var(--GR); }
   .hero .eyebrow { font-size: clamp(11px, 1.6vw, 14px); letter-spacing: .1em; }

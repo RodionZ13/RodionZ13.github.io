@@ -166,8 +166,41 @@
   const corner = HI && HC
     ? `<img class="hero-corner" src="${esc(largest(HC.images))}" srcset="${srcset(HC.images)}" sizes="${sizes(HC.width / 100)}" alt="" style="left:${HC.left}%;top:${HC.top}%;width:${HC.width}%">`
     : '';
+  // Пар над крышей: рассеянная дымка и клубы, растрёпанные шумом. Два слоя с разным рисунком по очереди
+  // поднимаются и тают (анимация в styles.css), поэтому пар как будто всё время идёт. Координаты — в единицах 1000×440.
+  function smokeLayer(id, seed, dx) {
+    const fill = `url(#puff-${id})`;
+    const haze = (cx, cy, rx, ry, a) => `<ellipse cx="${cx + dx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" fill-opacity="${a}"/>`;
+    // клуб: круги снизу вверх — растут, сносятся ветром и тают
+    const plume = (x0, y0, h, drift, r0, r1, n, a0) => Array.from({ length: n }, (_, i) => {
+      const t = i / (n - 1);
+      const x = x0 + dx + drift * Math.pow(t, 1.6) + Math.sin(t * 9 + x0) * 10;
+      const a = a0 * Math.min(1, t / .18) * Math.pow(1 - t, 1.3);
+      return `<circle cx="${x.toFixed(1)}" cy="${(y0 - h * t).toFixed(1)}" r="${(r0 + (r1 - r0) * t).toFixed(1)}" fill="${fill}" fill-opacity="${a.toFixed(3)}"/>`;
+    }).join('');
+    return `<svg class="smk smk-${id}" viewBox="0 0 1000 440" preserveAspectRatio="xMidYMax slice">
+      <defs>
+        <radialGradient id="puff-${id}"><stop offset="0" stop-color="#F1ECE5"/><stop offset=".5" stop-color="#F1ECE5" stop-opacity=".5"/><stop offset="1" stop-color="#F1ECE5" stop-opacity="0"/></radialGradient>
+        <filter id="smk-${id}" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.0055 0.011" numOctaves="4" seed="${seed}" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="150" xChannelSelector="R" yChannelSelector="G"/>
+          <feGaussianBlur stdDeviation="9"/>
+        </filter>
+      </defs>
+      <g filter="url(#smk-${id})">
+        ${haze(330, 150, 260, 95, .32)}${haze(600, 115, 300, 105, .3)}${haze(860, 150, 230, 90, .22)}
+        ${haze(470, 210, 230, 70, .26)}${haze(730, 205, 220, 65, .2)}${haze(250, 80, 200, 70, .18)}
+        ${plume(300, 262, 250, -90, 34, 190, 26, .5)}${plume(480, 268, 270, -30, 38, 210, 28, .55)}
+        ${plume(660, 262, 250, 40, 34, 200, 26, .45)}${plume(820, 258, 220, 100, 30, 170, 22, .35)}
+      </g>
+    </svg>`;
+  }
+  const SM = S.heroSmoke;
+  const smoke = HI && SM
+    ? `<div class="hero-smoke" aria-hidden="true" style="--sl:${SM.left}%;--st:${SM.top}%;--sw:${SM.width}%;--sh:${SM.height}%">${smokeLayer('a', 23, 0)}${smokeLayer('b', 61, 40)}</div>`
+    : '';
   $('#hero-photo').innerHTML = HI
-    ? `<img class="hero-bg" src="${esc(largest(HI))}" srcset="${srcset(HI)}" sizes="${sizes(1)}" fetchpriority="high" alt="${esc(S.heroAlt || 'Баня компании ' + S.company)}">${corner}`
+    ? `<img class="hero-bg" src="${esc(largest(HI))}" srcset="${srcset(HI)}" sizes="${sizes(1)}" fetchpriority="high" alt="${esc(S.heroAlt || 'Баня компании ' + S.company)}">${smoke}${corner}`
     : heroArt().replace('<svg ', '<svg class="hero-bg" ');
   // размытая копия фона для краёв очень широких экранов — берётся самая лёгкая версия фото
   if (HI) $('.hero').style.setProperty('--hero-fill', `url("${HI[Math.min(...Object.keys(HI).map(Number))]}")`);
