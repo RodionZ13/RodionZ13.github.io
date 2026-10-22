@@ -533,6 +533,8 @@ footer .logo { color: var(--on-dark); }
   .trust li:first-child { padding-left: 16px; }
   .trust li:nth-child(odd) { padding-left: 0; }
   .gallery, .reviews { grid-template-columns: repeat(2, 1fr); }
+  /* в две колонки нечётное последнее фото — на всю ширину, без пустой клетки */
+  .gallery .ph:last-child:nth-child(odd) { grid-column: 1 / -1; aspect-ratio: 2 / 1; }
   .custom, .stages, .deal { grid-template-columns: 1fr; }
   .stages, .deal { gap: 28px; }
   .custom-art { min-height: 440px; }
@@ -555,6 +557,7 @@ footer .logo { color: var(--on-dark); }
   h2 { font-size: 31px; }
   .sec-sub { font-size: 17px; }
   .projects, .steps, .gallery, .reviews, .opts-2 { grid-template-columns: 1fr; }
+  .gallery .ph:last-child:nth-child(odd) { aspect-ratio: 4 / 3; }
   .proj-plan { height: 260px; }
   .proj-switch { display: flex; width: 100%; margin-top: -8px; }
   .proj-switch button { flex: 1 1 0; flex-direction: column; align-items: center; gap: 1px; padding: 10px 8px; font-size: 15px; }
