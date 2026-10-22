@@ -334,7 +334,7 @@ h2 { margin-top: 12px; font-size: 46px; font-weight: 700; line-height: 1.08; let
 .stage-bar span:nth-child(3) { background: rgba(240, 178, 106, .55); }
 .stage-list { list-style: none; }
 .stage-list b { display: block; font-size: 24px; font-weight: 700; color: var(--amber-2); }
-.stage-list span { display: block; font-size: 14px; line-height: 1.45; color: var(--on-dark-muted); }
+.stage-list .stage-t { display: block; font-size: 14px; line-height: 1.45; color: var(--on-dark-muted); }
 
 /* ---------- договор ---------- */
 .deal { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
@@ -681,8 +681,15 @@ footer .logo { color: var(--on-dark); }
   .hero-cta .msg-stack { display: none; }
 }
 
+/* короткие версии текстов и детали этапов оплаты — только для телефона */
+.stage-n, .stage-prog, .stage-sum { display: none; }
+.t-short { display: none !important; }
+
 /* ---------- телефон: компактные блоки (компьютер и планшет не меняются) ---------- */
 @media (max-width: 640px) {
+  .t-full { display: none !important; }
+  .t-short { display: inline !important; }
+
   /* общие отступы разделов и заголовки — чуть плотнее */
   .sec { padding: 52px 0; }
   .sec-head { margin-bottom: 24px; }
@@ -788,4 +795,44 @@ footer .logo { color: var(--on-dark); }
   .rev-src { font-size: 11.5px; }
   .rev p { font-size: 14.5px; line-height: 1.5; }
   .demo-line { margin-top: 6px; font-size: 12px; }
+
+  /* больше воздуха: подписи цифр первого экрана, полоса под ним и списки */
+  .stats span { display: block; margin-top: 2px; line-height: 1.3; }
+  .trust li, .trust li:nth-child(odd) { padding-top: 14px; padding-bottom: 14px; }
+  .incl .note { display: none; }   /* то же сказано в разделе про договор */
+  .incl li { padding: 12px 0; font-size: 14px; }
+  .deal-list { row-gap: 18px; }
+  .steps li { padding: 14px 0; }
+
+  /* «Спроектируем под ваш участок» — компактнее */
+  .custom { border-radius: 22px; }
+  .custom-text { padding: 26px 20px 22px; }
+  .custom h2 { font-size: 24px; }
+  .custom-steps { gap: 12px; margin: 18px 0 20px; }
+  .custom-steps li { gap: 12px; }
+  .custom-steps li::before { width: 28px; height: 28px; font-size: 14px; }
+  .custom-steps b { font-size: 15px; line-height: 1.3; }
+  .custom-steps span { font-size: 13px; }
+  .custom-cta { gap: 8px; }
+  .custom-cta .btn { height: 46px; font-size: 15.5px; }
+  .custom-free { margin-top: 10px; font-size: 12.5px; }
+  .custom-art { min-height: 230px; }
+  .custom-art svg { top: 10px; height: calc(100% - 56px); }
+  .art-tag { bottom: 12px; padding: 6px 12px; font-size: 11.5px; }
+
+  /* этапы оплаты после расчёта — карточки, листаются вбок */
+  .stages { display: block; margin-top: 18px; padding: 0; border: 0; background: none; }
+  .stages h3 { font-size: 18px; }
+  .stages h3 + p { margin-top: 4px; font-size: 13.5px; }
+  .stage-note, .stage-bar { display: none; }
+  .stage-list { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 18px;
+    margin: 12px -18px 0; padding: 0 18px 4px; scrollbar-width: none; }
+  .stage-list::-webkit-scrollbar { display: none; }
+  .stage-list li { flex: 0 0 64%; display: flex; flex-direction: column; align-items: stretch; gap: 2px; padding: 16px;
+    border-radius: 16px; background: var(--char-2); border: 1px solid var(--line-dark); scroll-snap-align: start; }
+  .stage-n, .stage-sum { display: block; font-size: 12px; color: var(--on-dark-muted); }
+  .stage-list b { width: auto; margin-top: 4px; font-size: 30px; line-height: 1.1; }
+  .stage-list .stage-t { min-height: 2.9em; font-size: 13.5px; color: var(--on-dark); }
+  .stage-prog { display: block; height: 6px; margin: 10px 0 4px; border-radius: 999px;
+    background: linear-gradient(90deg, var(--amber) var(--paid), rgba(246, 238, 228, .12) var(--paid)); }
 }

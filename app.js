@@ -45,6 +45,9 @@
   // ---------- тексты и ссылки из настроек ----------
   const get = path => path.split('.').reduce((o, k) => (o == null ? o : o[k]), S);
   $$('[data-site]').forEach(el => { const v = get(el.dataset.site); if (v != null) el.textContent = v; });
+  // текст с короткой версией для телефона: на узком экране видна вторая (styles.css, .t-full / .t-short)
+  const tx = (full, short) => short ? `<span class="t-full">${full}</span><span class="t-short">${short}</span>` : full;
+  if (S.hero.textShort) $('.hero .lead').innerHTML = tx(esc(S.hero.text), esc(S.hero.textShort));
   document.title = `${S.company} — ${S.tagline.toLowerCase()} в ${S.region}`;
 
   // ---------- мессенджеры ----------
@@ -283,15 +286,21 @@
   // ширина этапа на полосе — по его проценту
   $('.stages').style.setProperty('--stage-cols', S.payStages.map(([p]) => p + 'fr').join(' '));
   $('#stage-bar').innerHTML = S.payStages.map(() => '<span></span>').join('');
-  $('#stage-list').innerHTML = S.payStages.map(([p, t]) => `<li><b>${p}%</b><span>${t}</span></li>`).join('');
+  // на телефоне этапы — карточки, листаются вбок: номер этапа и сколько оплачено к этому моменту (на компьютере скрыты)
+  let paid = 0;
+  $('#stage-list').innerHTML = S.payStages.map(([p, t, short], i) => {
+    paid += p;
+    return `<li><small class="stage-n">Этап ${i + 1} из ${S.payStages.length}</small><b>${p}%</b><span class="stage-t">${tx(t, short)}</span>` +
+      `<i class="stage-prog" style="--paid:${paid}%"></i><small class="stage-sum">оплачено ${paid}%</small></li>`;
+  }).join('');
 
   // индивидуальный проект: подпись к схеме — модель с бейджем
   const featured = S.projects.find(p => p.badge) || S.projects[0];
-  $('#custom-steps').innerHTML = S.custom.map(([b, t]) => `<li><div><b>${b}</b><span>${t}</span></div></li>`).join('');
+  $('#custom-steps').innerHTML = S.custom.map(([b, t, short]) => `<li><div><b>${b}</b><span>${tx(t, short)}</span></div></li>`).join('');
   $('#custom-tag').textContent = `Пример: модель «${featured.name}» на участке 12 соток`;
 
   // договор: список и образец с ценой и сроком модели с бейджем
-  $('#deal-list').innerHTML = S.deal.map(([i, b, t]) => `<li><span class="ic">${ic(i)}</span><div><b>${b}</b><p>${t}</p></div></li>`).join('');
+  $('#deal-list').innerHTML = S.deal.map(([i, b, t, short]) => `<li><span class="ic">${ic(i)}</span><div><b>${b}</b><p>${tx(t, short)}</p></div></li>`).join('');
   const featuredDays = (S.calc.types[0].sizes.find(s => s.project === featured.name) || { days: 30 }).days;
   const dueDate = new Date(Date.now() + (featuredDays + 7) * 864e5).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }).replace(/\s*г\.$/, '');
   const D = S.dealDoc, ln = w => `<div class="ln" style="width:${w}%"></div>`;
@@ -303,9 +312,9 @@
     `<div class="sign"><div>Исполнитель</div><div>Заказчик</div></div>` +
     `<div class="stamp">${esc(S.company.toUpperCase()).split(' ').join('<br>')}<br>${esc(S.address.split(',')[0].toUpperCase())}</div>`;
 
-  $('#included-list').innerHTML = S.included.map(t => `<li>${ic('check')}<span>${t}</span></li>`).join('');
-  $('#steps-list').innerHTML = S.steps.map(([t, d], i) =>
-    `<li><span class="num">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></li>`).join('');
+  $('#included-list').innerHTML = S.included.map(t => `<li>${ic('check')}<span>${Array.isArray(t) ? tx(...t) : t}</span></li>`).join('');
+  $('#steps-list').innerHTML = S.steps.map(([t, d, short], i) =>
+    `<li><span class="num">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${tx(d, short)}</p></li>`).join('');
 
   // ---------- своё производство: фото цеха и цифры ----------
   const PROD = S.production;
@@ -351,7 +360,7 @@
   // размеры, материалы и опции перестраиваются при смене типа бани
   function buildType() {
     const t = cur();
-    $('#calc-note').textContent = t.note;
+    $('#calc-note').innerHTML = tx(t.note, t.noteShort);
     $('#calc-size-label').textContent = t.sizesLabel;
     $('#calc-mat-label').textContent = t.materialsLabel;
     $('#calc-size').innerHTML = t.sizes.map((s, i) =>
@@ -396,7 +405,7 @@
       : `Изготовление — около ${r.days} ${daysWord}, ${r.install}`;
     $('#calc-sel').textContent = r.text;
     $('#calc-cta-text').textContent = inst ? 'Оформить рассрочку' : 'Зафиксировать цену';
-    $('#calc-fine').textContent = inst ? INST.note : 'Расчёт ни к чему не обязывает. Свяжемся и ответим на вопросы.';
+    $('#calc-fine').innerHTML = inst ? INST.note : tx('Расчёт ни к чему не обязывает. Свяжемся и ответим на вопросы.', 'Расчёт ни к чему не обязывает.');
   }
   // «Сразу / В рассрочку» в калькуляторе; кнопка «Узнать условия» под карточками тоже включает рассрочку
   if (!INST) $('#pay-toggle').remove();
