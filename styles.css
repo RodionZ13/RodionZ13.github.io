@@ -49,6 +49,7 @@ i[data-icon] svg { width: 1.2em; height: 1.2em; }
 /* три чёрно-белых значка в ряд на кнопке первого экрана */
 .msg-stack { display: inline-flex; gap: .3em; }
 .msg-stack .brand { font-size: .85em; color: var(--on-dark); }
+.btn-amber .msg-stack .brand { color: var(--amber-ink); }   /* на оранжевой кнопке в шапке — тёмные */
 
 /* ---------- кнопки ---------- */
 .btn {
@@ -77,9 +78,9 @@ i[data-icon] svg { width: 1.2em; height: 1.2em; }
 .top-in { display: flex; align-items: center; gap: 28px; height: 72px; }
 .logo { display: flex; align-items: center; gap: 12px; }
 /* знак — оранжевая баня-бочка без подложки (рисует app.js) */
-.logo-mark { flex: none; width: 42px; height: 42px; color: var(--amber); }
+.logo-mark { flex: none; width: 42px; height: 42px; color: var(--amber); transform: translateY(-5px); }   /* бочка внизу знака — чуть выше, вровень с названием */
 .logo-mark svg { width: 100%; height: 100%; }
-.logo b { display: block; font-size: 18px; font-weight: 700; line-height: 1.15; }
+.logo b { display: block; font-size: 18px; font-weight: 700; line-height: 1.15; white-space: nowrap; }
 .logo small { display: block; font-size: 12.5px; color: var(--on-dark-muted); }
 .nav { display: flex; gap: 26px; margin-left: auto; font-size: 15px; color: var(--on-dark-muted); }
 .nav a:hover { color: var(--on-dark); }
@@ -603,6 +604,12 @@ footer .logo { color: var(--on-dark); }
   .hero-cta .btn-amber i { display: none; }
 }
 @media (max-width: 400px) {
+  /* шапка на узком телефоне: знак и кнопка компактнее, чтобы название не переносилось */
+  .logo { gap: 10px; }
+  .logo-mark { width: 36px; height: 36px; transform: translateY(-4px); }
+  .logo b { font-size: 17px; }
+  .top-cta .btn { gap: 6px; padding: 0 12px; }
+  .top-cta .msg-stack { gap: .22em; }
   .hero-cta { gap: 8px; }
   .hero-cta .btn { gap: 6px; padding: 0 12px; }
   .msg-stack { gap: .22em; }
@@ -613,4 +620,5 @@ footer .logo { color: var(--on-dark); }
 }
 @media (max-width: 350px) {
   .hero-cta .msg-stack { display: none; }
+  .top-cta .msg-label { display: none; }   /* в шапке остаются только значки мессенджеров */
 }
