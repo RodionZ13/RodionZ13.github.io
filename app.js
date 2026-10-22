@@ -36,6 +36,11 @@
   };
   const icon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
   const ic = name => `<i data-icon="${name}">${icon(name)}</i>`;
+  // знак компании: баня-бочка сбоку, труба и дымок (тот же рисунок — в img/favicon.svg)
+  const LOGO = '<svg viewBox="0 -2.5 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M11 18h26a5.5 11 0 0 1 0 22H11"/><ellipse cx="11" cy="29" rx="5.5" ry="11"/><path d="M21 18v22M30 18v22"/>' +
+    '<path d="M33 18v-6h4v6"/><path d="M35 8c-2-1.6 2-3.2 0-5"/></svg>';
+  $$('.logo-mark').forEach(el => { el.innerHTML = LOGO; });
 
   // ---------- тексты и ссылки из настроек ----------
   const get = path => path.split('.').reduce((o, k) => (o == null ? o : o[k]), S);

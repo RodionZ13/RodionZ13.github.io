@@ -76,7 +76,9 @@ i[data-icon] svg { width: 1.2em; height: 1.2em; }
 .top.over { background: transparent; backdrop-filter: none; border-bottom-color: transparent; }
 .top-in { display: flex; align-items: center; gap: 28px; height: 72px; }
 .logo { display: flex; align-items: center; gap: 12px; }
-.logo-mark { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--amber); color: var(--amber-ink); font-size: 18px; }
+/* знак — оранжевая баня-бочка без подложки (рисует app.js) */
+.logo-mark { flex: none; width: 42px; height: 42px; color: var(--amber); }
+.logo-mark svg { width: 100%; height: 100%; }
 .logo b { display: block; font-size: 18px; font-weight: 700; line-height: 1.15; }
 .logo small { display: block; font-size: 12.5px; color: var(--on-dark-muted); }
 .nav { display: flex; gap: 26px; margin-left: auto; font-size: 15px; color: var(--on-dark-muted); }
