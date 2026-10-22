@@ -222,7 +222,7 @@
         ${p.people ? `<ul class="cap">${p.people.map(([b, t], i) => `<li>${ic(i ? 'sofa' : 'users')}<span><b>${b}</b> ${t}</span></li>`).join('')}</ul>` : ''}
         <ul class="tags">${p.tags.map(t => `<li>${t}</li>`).join('')}</ul>
         <div class="proj-foot">
-          <div class="price"><small>под ключ от</small><b>${rub(p.price)}</b>${INST ? `<span class="inst">или ${rub(monthly(p.price))} в месяц<span>рассрочка 0% на ${INST.months} месяцев</span></span>` : ''}</div>
+          <div class="price"><small>под ключ от</small><b>${rub(p.price)}</b>${INST ? `<span class="inst">или от ${rub(monthly(p.price))} в месяц<span>в рассрочку на ${INST.months} месяцев</span></span>` : ''}</div>
           <a class="btn btn-sm btn-dark" href="#contact" data-pick="${esc(p.name)}">Хочу такую</a>
         </div>
       </div>
@@ -243,9 +243,9 @@
   // рассрочка под карточками и этапы оплаты под калькулятором
   const stagesText = S.payStages.map(([p]) => p + '%').join(' · ');
   if (INST) {
-    $('#inst-title').textContent = `Рассрочка 0% на ${INST.months} месяцев или оплата частями`;
+    $('#inst-title').textContent = 'Рассрочка и оплата частями';
     const n = S.payStages.length;
-    $('#inst-text').textContent = `Без первого взноса через банк-партнёр — или напрямую нам в ${['', 'один', 'два', 'три', 'четыре'][n] || n} ${plural(n, 'этап', 'этапа', 'этапов')}: ${stagesText}.`;
+    $('#inst-text').textContent = `Через банк-партнёр или напрямую нам в ${['', 'один', 'два', 'три', 'четыре'][n] || n} ${plural(n, 'этап', 'этапа', 'этапов')}: ${stagesText}.`;
   } else $('#inst-banner').remove();
   // ширина этапа на полосе — по его проценту
   $('.stages').style.setProperty('--stage-cols', S.payStages.map(([p]) => p + 'fr').join(' '));
@@ -353,7 +353,7 @@
     // «около 21 дня», «около 14 дней»: после «около» — родительный падеж
     const daysWord = r.days % 10 === 1 && r.days % 100 !== 11 ? 'дня' : 'дней';
     $('#calc-days').textContent = inst
-      ? `${INST.months} месяцев без переплаты · итого ${rub(r.total)}`
+      ? `При рассрочке на ${INST.months} месяцев, точный платёж посчитает банк`
       : `Изготовление — около ${r.days} ${daysWord}, ${r.install}`;
     $('#calc-sel').textContent = r.text;
     $('#calc-cta-text').textContent = inst ? 'Оформить рассрочку' : 'Зафиксировать цену';
