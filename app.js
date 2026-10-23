@@ -507,4 +507,26 @@
   if (!S.demo) { $('#demo-note').remove(); $('#done-demo').remove(); }
   else if (S.photoCredit) $('#demo-note').textContent += `  Фото: ${S.photoCredit}.`;
   $$('i[data-icon]').forEach(el => { if (!el.innerHTML) el.innerHTML = icon(el.dataset.icon); });
+
+  // ---------- телефон: ссылка всегда открывается с начала страницы ----------
+  // Кнопки внутри страницы не дописывают в адрес #calc, #contact и т. п. — иначе скопированная ссылка
+  // потом открывается сразу на этом разделе. Если метка в ссылке уже есть, она убирается, страница — сверху.
+  const onPhone = matchMedia('(max-width: 640px)');
+  if (onPhone.matches) {
+    history.scrollRestoration = 'manual';
+    if (location.hash) {
+      history.replaceState(null, '', location.pathname + location.search);
+      const toTop = () => window.scrollTo({ top: 0, behavior: 'instant' });
+      toTop(); requestAnimationFrame(toTop); window.addEventListener('load', toTop, { once: true });
+    }
+  }
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || !onPhone.matches || e.defaultPrevented) return;
+    const id = a.getAttribute('href').slice(1);
+    const target = id ? document.getElementById(id) : null;
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 })();
