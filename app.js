@@ -549,7 +549,7 @@
   const form = $('#lead');
   const project = $('#lead-project');
   const optionText = p => `${p.name}, ${p.size}${p.sizeText ? '' : ' м'}`;
-  project.innerHTML = '<option value="">Ещё не выбрал</option>' + allProjects.map(p => `<option>${optionText(p)}</option>`).join('');
+  project.innerHTML = '<option value="">Пока не выбрали</option>' + allProjects.map(p => `<option>${optionText(p)}</option>`).join('');
   const pickProject = name => { const p = allProjects.find(x => x.name === name); project.value = p ? optionText(p) : ''; };
   document.addEventListener('click', e => {
     const pick = e.target.closest('[data-pick]');
