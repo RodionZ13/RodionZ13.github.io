@@ -839,12 +839,18 @@ footer .logo { color: var(--on-dark); }
   /* рассрочка на телефоне — только в калькуляторе: в карточках моделей и баннером под ними её нет */
   .proj .inst, .inst-banner { display: none; }
   .sec-custom { padding-top: 0; }   /* блок идёт сразу за моделями, без двойного отступа */
-  /* первый экран: баня чуть меньше и ниже, чтобы над крышей было небо для пара (как на компьютере).
+  /* первый экран: фото чуть ниже — верх фото не ниже 40px (под шапкой), над крышей остаётся небо для пара (как на компьютере); низ фото плавно уходит в тёмный фон.
      Те же формулы, что в мобильном блоке выше: фото 4340×1564, центр бани — 54,72% / 58,59% кадра, баня — 65,5% высоты. */
-  .hero-bg { --ih: min(100cqh, 92cqw); top: calc(50cqh + 52px - var(--ih) * .5859); }
+  /* на низких телефонах баня чуть меньше: целиком над текстом и с полосой неба под шапкой для пара */
+  .hero-bg, .hero-smoke { --ih: min(120cqh, 110cqw, (100cqh - 108px) * 1.527); }
+  .hero-bg { top: min(40px, calc(100cqh - var(--ih) * .9134 - 4px), calc(50cqh + 52px - var(--ih) * .5859));
+    -webkit-mask-image: linear-gradient(180deg, #000 92%, transparent); mask-image: linear-gradient(180deg, #000 92%, transparent); }
   /* пар — только между шапкой и крышей: выше 62px (под шапкой) не виден, к линии крыши (50% слоя) тает */
-  .hero-smoke { --roof: calc(50cqh + 52px - .3275 * min(100cqh, 92cqw)); opacity: 1;
-    --fade-y: linear-gradient(180deg, transparent 0, transparent 62px, #000 104px, #000 calc(50% - 46px), transparent calc(50% - 6px)); }
+  .hero-smoke { --roof: calc(min(40px, 100cqh - .9134 * var(--ih) - 4px, 50cqh + 52px - .5859 * var(--ih)) + .2584 * var(--ih));
+    opacity: .8;
+    --fade-y: linear-gradient(180deg, transparent 0, transparent 52px, rgba(0,0,0,.3) 74px, rgba(0,0,0,.6) calc(50% - 34px), rgba(0,0,0,.3) calc(50% - 16px), transparent calc(50% - 2px)); }
+  /* затемнение фото под шапкой — длиннее и мягче, без полосы на стыке с паром */
+  .hero-photo::after { background: linear-gradient(180deg, rgba(12, 8, 6, .5) 0, rgba(12, 8, 6, .28) 90px, rgba(12, 8, 6, .08) 150px, transparent 190px, transparent 68%, #0E0A08 100%); }
   /* шапка на телефоне всегда тёмная, даже над фото — чтобы логотип и кнопка читались */
   .top.over { background: rgba(22, 16, 12, .88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom-color: var(--line-dark); }  /* первый экран: без карточки модели */
   .hero-card { display: none; }
