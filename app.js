@@ -625,25 +625,22 @@
   else if (S.photoCredit) $('#demo-note').textContent += `  Фото: ${S.photoCredit}.`;
   $$('i[data-icon]').forEach(el => { if (!el.innerHTML) el.innerHTML = icon(el.dataset.icon); });
 
-  // ---------- телефон: ссылка всегда открывается с начала страницы ----------
-  // Кнопки внутри страницы не дописывают в адрес #calc, #contact и т. п. — иначе скопированная ссылка
-  // потом открывается сразу на этом разделе. Если метка в ссылке уже есть, она убирается, страница — сверху.
-  const onPhone = matchMedia('(max-width: 640px)');
-  if (onPhone.matches) {
-    history.scrollRestoration = 'manual';
-    if (location.hash) {
-      history.replaceState(null, '', location.pathname + location.search);
-      const toTop = () => window.scrollTo({ top: 0, behavior: 'instant' });
-      toTop(); requestAnimationFrame(toTop); window.addEventListener('load', toTop, { once: true });
-    }
+  // ---------- ссылка всегда открывается с начала страницы (телефон и компьютер) ----------
+  // Кнопки внутри страницы не дописывают в адрес #top, #calc, #contact и т. п. — иначе ссылка, скопированная
+  // из адресной строки, потом открывается сразу на этом разделе, а в мессенджере выглядит как …/#top.
+  // Если метка в ссылке уже есть, она убирается, страница — сверху.
+  if (matchMedia('(max-width: 640px)').matches) history.scrollRestoration = 'manual';
+  if (location.hash) {
+    history.replaceState(null, '', location.pathname + location.search);
+    const toTop = () => window.scrollTo({ top: 0, behavior: 'instant' });
+    toTop(); requestAnimationFrame(toTop); window.addEventListener('load', toTop, { once: true });
   }
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]');
-    if (!a || !onPhone.matches || e.defaultPrevented) return;
+    if (!a || e.defaultPrevented) return;
+    e.preventDefault();   // и для ссылок-заглушек «#» (политика, оферта в демо): страница не прыгает наверх
     const id = a.getAttribute('href').slice(1);
     const target = id ? document.getElementById(id) : null;
-    if (!target) return;
-    e.preventDefault();
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (target) target.scrollIntoView({ behavior: calm.matches ? 'auto' : 'smooth', block: 'start' });
   });
 })();
