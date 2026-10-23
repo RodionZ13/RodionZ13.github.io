@@ -25,6 +25,9 @@
     camera: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
     steam: '<path d="M8 20c-2-3 2-4 0-7s2-4 0-7M12 20c-2-3 2-4 0-7s2-4 0-7M16 20c-2-3 2-4 0-7s2-4 0-7"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    prev: '<path d="M15 5l-7 7 7 7"/>',
+    next: '<path d="M9 5l7 7-7 7"/>',
+    close: '<path d="M6 6l12 12M18 6 6 18"/>',
     truck: '<path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/>',
     send: '<path d="M21 3 3 10.5l7 2.5 2.5 7z"/><path d="M10 13l11-10"/>',
     ruble: '<path d="M8 20V4h5.5a4 4 0 0 1 0 8H6M6 16h9"/>',
@@ -358,6 +361,97 @@
       ${img ? `<img src="${esc(img)}" alt="${esc(t)}, ${esc(place)}" loading="lazy" decoding="async"${pos ? ` style="object-position:${esc(pos)}"` : ''}>` : `<span class="cam">${ic('camera')}Фото объекта</span>`}
       <figcaption>${t}<small>${place}</small></figcaption>
     </figure>`).join('');
+
+  // ---------- просмотр фото на весь экран: объекты и производство (у каждого раздела свой набор) ----------
+  // Щелчок по фото открывает его крупно. Листать — стрелками, клавишами ← → или свайпом (лента с прилипанием к кадру).
+  // Закрыть — крестиком, Esc или щелчком по тёмному полю вокруг фото.
+  const lbSets = {};
+  [['gallery', '#gallery-grid .ph'], ['prod', '#prod-grid .prod-ph']].forEach(([set, sel]) => {
+    lbSets[set] = $$(sel).filter(f => $('img', f)).map((f, i) => {
+      const img = $('img', f), cap = $('figcaption', f);
+      Object.assign(f.dataset, { lb: set, i });
+      f.tabIndex = 0;
+      f.setAttribute('role', 'button');
+      f.setAttribute('aria-label', `Открыть фото: ${img.alt}`);
+      return { src: img.getAttribute('src'), alt: img.alt, title: cap.firstChild.textContent.trim(), sub: $('small', cap)?.textContent || '' };
+    });
+  });
+  const lb = document.createElement('div');
+  lb.className = 'lb';
+  lb.hidden = true;
+  lb.setAttribute('role', 'dialog');
+  lb.setAttribute('aria-modal', 'true');
+  lb.setAttribute('aria-label', 'Просмотр фото');
+  lb.innerHTML = `<div class="lb-track"></div><p class="lb-count" aria-live="polite"></p>
+    <button class="lb-btn lb-close" type="button" aria-label="Закрыть">${icon('close')}</button>
+    <button class="lb-btn lb-prev" type="button" aria-label="Предыдущее фото">${icon('prev')}</button>
+    <button class="lb-btn lb-next" type="button" aria-label="Следующее фото">${icon('next')}</button>`;
+  document.body.appendChild(lb);
+  const lbTrack = $('.lb-track', lb), lbCount = $('.lb-count', lb), lbPrev = $('.lb-prev', lb), lbNext = $('.lb-next', lb);
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+  let lbItems = [], lbIdx = 0, lbFrom = null, lbTimer = 0, lbRaf = 0;
+  const lbShow = () => {
+    lbCount.textContent = `${lbIdx + 1} / ${lbItems.length}`;
+    lbPrev.disabled = lbIdx === 0;
+    lbNext.disabled = lbIdx === lbItems.length - 1;
+  };
+  const lbGo = (i, smooth) => {
+    lbIdx = Math.max(0, Math.min(lbItems.length - 1, i));
+    lbTrack.scrollTo({ left: lbIdx * lbTrack.clientWidth, behavior: smooth && !calm.matches ? 'smooth' : 'instant' });
+    lbShow();
+  };
+  const lbOpen = (set, i, from) => {
+    clearTimeout(lbTimer);
+    lbItems = lbSets[set];
+    lbFrom = from;
+    lbTrack.innerHTML = lbItems.map(p => `<figure class="lb-slide"><img src="${esc(p.src)}" alt="${esc(p.alt)}">` +
+      `<figcaption>${esc(p.title)}<small>${esc(p.sub)}</small></figcaption></figure>`).join('');
+    lb.hidden = false;
+    document.documentElement.classList.add('lb-lock');
+    lbGo(i);   // заодно пересчитывает раскладку — поэтому появление ниже идёт плавно
+    lb.classList.add('on');
+    $('.lb-close', lb).focus({ preventScroll: true });
+  };
+  const lbClose = () => {
+    if (lb.hidden) return;
+    lb.classList.remove('on');
+    document.documentElement.classList.remove('lb-lock');
+    lbTimer = setTimeout(() => { lb.hidden = true; lbTrack.innerHTML = ''; }, 200);
+    if (lbFrom) lbFrom.focus({ preventScroll: true });
+  };
+  document.addEventListener('click', e => {
+    const f = e.target.closest('[data-lb]');
+    if (f) lbOpen(f.dataset.lb, +f.dataset.i, f);
+  });
+  lb.addEventListener('click', e => {
+    if (e.target.closest('.lb-close')) lbClose();
+    else if (e.target.closest('.lb-prev')) lbGo(lbIdx - 1, true);
+    else if (e.target.closest('.lb-next')) lbGo(lbIdx + 1, true);
+    else if (!e.target.closest('.lb-slide img, .lb-slide figcaption')) lbClose();
+  });
+  document.addEventListener('keydown', e => {
+    if (lb.hidden) {
+      const f = e.target.closest && e.target.closest('[data-lb]');
+      if (f && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); lbOpen(f.dataset.lb, +f.dataset.i, f); }
+      return;
+    }
+    if (e.key === 'Escape') lbClose();
+    else if (e.key === 'ArrowRight') { e.preventDefault(); lbGo(lbIdx + 1, true); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); lbGo(lbIdx - 1, true); }
+    else if (e.key === 'Tab') {   // фокус не уходит со страницы просмотра на сайт под ней
+      const btns = $$('.lb-btn', lb).filter(b => !b.disabled && b.offsetParent);
+      const k = btns.indexOf(document.activeElement);
+      e.preventDefault();
+      btns[(k + (e.shiftKey ? -1 : 1) + btns.length) % btns.length].focus();
+    }
+  });
+  // свайп и прокрутка ленты сами меняют номер фото
+  lbTrack.addEventListener('scroll', () => {
+    cancelAnimationFrame(lbRaf);
+    lbRaf = requestAnimationFrame(() => { lbIdx = Math.round(lbTrack.scrollLeft / lbTrack.clientWidth); lbShow(); });
+  }, { passive: true });
+  window.addEventListener('resize', () => { if (!lb.hidden) lbGo(lbIdx); });
+
   // рейтинг с карт
   $('#ratings').innerHTML = (S.ratings || []).map(r => {
     const count = `${r.count} ${plural(r.count, 'отзыв', 'отзыва', 'отзывов')}`;
