@@ -216,6 +216,29 @@
   const onScroll = () => top.classList.toggle('over', window.scrollY < 40);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  // меню-бургер (телефон и планшет): открывается кнопкой, закрывается по выбору раздела, клику мимо и Esc.
+  // При открытии подсвечен раздел, который сейчас на экране; страница под меню не прокручивается.
+  const burger = $('.burger'), menuLinks = $$('#mnav li a');
+  const setMenu = open => {
+    if (open) {
+      const line = top.getBoundingClientRect().bottom + 80;
+      const cur = menuLinks.filter(a => { const s = document.getElementById(a.hash.slice(1)); return s && s.getBoundingClientRect().top <= line; }).pop();
+      menuLinks.forEach(a => a.classList.toggle('on', a === cur));
+    }
+    top.classList.toggle('menu-open', open);
+    document.documentElement.classList.toggle('menu-lock', open);
+    burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Меню');
+  };
+  burger.addEventListener('click', () => setMenu(!top.classList.contains('menu-open')));
+  // этот обработчик стоит раньше прокрутки к разделу (в конце файла): меню успевает закрыться и снять блокировку прокрутки
+  document.addEventListener('click', e => {
+    if (!top.classList.contains('menu-open') || e.target.closest('.burger')) return;
+    if (!e.target.closest('#mnav') || e.target.closest('a')) setMenu(false);
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && top.classList.contains('menu-open')) { setMenu(false); burger.focus(); } });
+  matchMedia('(min-width: 1081px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
   $('#stats').innerHTML = S.stats.map(([n, t]) => `<li><b>${n}</b><span>${t}</span></li>`).join('');
   $('#trust').innerHTML = S.trust.map(([i, b, t]) => `<li>${ic(i)}<div><b>${b}</b><span>${t}</span></div></li>`).join('');
 

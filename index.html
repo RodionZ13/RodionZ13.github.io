@@ -7,8 +7,8 @@
 <title>Бани под ключ</title>
 <meta name="description" content="Модульные бани под ключ: изготовление в цеху за 30 дней, доставка и установка за один день. Фиксированная цена в договоре.">
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="fonts/fonts.css?v=202610231428">
-<link rel="stylesheet" href="styles.css?v=202610231428">
+<link rel="stylesheet" href="fonts/fonts.css?v=202610231442">
+<link rel="stylesheet" href="styles.css?v=202610231442">
 </head>
 <body>
 
@@ -31,9 +31,32 @@
         <button class="btn btn-sm btn-amber" type="button" aria-expanded="false" aria-haspopup="true">Написать</button>
         <div class="msg-menu"></div>
       </div>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Меню"><span></span></button>
     </div>
   </div>
+  <!-- меню для телефона и планшета: все разделы по порядку, текущий подсвечивается -->
+  <nav class="mnav" id="mnav" aria-label="Разделы сайта">
+    <div class="wrap">
+      <ul>
+        <li><a href="#projects">Модели и цены</a></li>
+        <li><a href="#custom">Индивидуальный проект</a></li>
+        <li><a href="#included">Что входит в цену</a></li>
+        <li><a href="#calc">Калькулятор</a></li>
+        <li><a href="#deal">Договор</a></li>
+        <li><a href="#steps">Как работаем</a></li>
+        <li><a href="#gallery">Установленные бани</a></li>
+        <li><a href="#production">Производство</a></li>
+        <li><a href="#reviews">Отзывы</a></li>
+        <li><a href="#faq">Вопросы</a></li>
+      </ul>
+      <div class="mnav-foot">
+        <a class="mnav-phone" data-tel><span data-site="phone"></span><small data-site="hours"></small></a>
+        <a class="btn btn-sm btn-amber" href="#contact">Оставить заявку</a>
+      </div>
+    </div>
+  </nav>
 </header>
+<div class="nav-shade"></div>
 
 <main>
   <section class="hero" id="top">
@@ -324,7 +347,7 @@
   </div>
 </footer>
 
-<script src="config.js?v=202610231428"></script>
-<script src="app.js?v=202610231428"></script>
+<script src="config.js?v=202610231442"></script>
+<script src="app.js?v=202610231442"></script>
 </body>
 </html>

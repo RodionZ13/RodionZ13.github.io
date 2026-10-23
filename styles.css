@@ -87,6 +87,8 @@ i[data-icon] svg { width: 1.2em; height: 1.2em; }
 .top-phone { text-align: right; line-height: 1.25; }
 .top-phone span { display: block; font-size: 16px; font-weight: 600; }
 .top-phone small { font-size: 12px; color: var(--on-dark-muted); }
+/* меню-бургер — только там, где разделы не помещаются в шапку (см. адаптив ≤1080px) */
+.burger, .mnav, .nav-shade { display: none; }
 
 /* ---------- первый экран ----------
    Широкий фон: фото бани + достроенный слева и сверху лес (hero-variants/forest-extend.ps1), на всю ширину экрана.
@@ -532,6 +534,36 @@ footer .logo { color: var(--on-dark); }
 @media (max-width: 1080px) {
   .nav { display: none; }
   .top-cta { margin-left: auto; }
+  /* вместо разделов — кнопка меню справа от «Написать»: открывает под шапкой список всех разделов */
+  .burger { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; border-radius: 50%; cursor: pointer;
+    background: rgba(246, 238, 228, .08); box-shadow: inset 0 0 0 1px rgba(246, 238, 228, .18); color: var(--on-dark); -webkit-tap-highlight-color: transparent; }
+  .burger span, .burger span::before, .burger span::after { display: block; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .2s, background-color .2s; }
+  .burger span { position: relative; }
+  .burger span::before, .burger span::after { content: ""; position: absolute; left: 0; }
+  .burger span::before { top: -6px; }
+  .burger span::after { top: 6px; }
+  .menu-open .burger span { background-color: transparent; }
+  .menu-open .burger span::before { transform: translateY(6px) rotate(45deg); }
+  .menu-open .burger span::after { transform: translateY(-6px) rotate(-45deg); }
+  .top.menu-open, .top.menu-open.over { background: var(--char); border-bottom-color: var(--line-dark); }
+  .mnav { display: block; position: absolute; left: 0; right: 0; top: 100%; max-height: calc(100vh - 100%); max-height: calc(100svh - 100%);
+    overflow-y: auto; overscroll-behavior: contain; background: var(--char); border-radius: 0 0 22px 22px; box-shadow: 0 24px 40px rgba(0, 0, 0, .35);
+    opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .18s, transform .18s, visibility 0s .18s; }
+  .menu-open .mnav { opacity: 1; visibility: visible; transform: none; transition: opacity .18s, transform .18s; }
+  .mnav ul { list-style: none; padding: 4px 0; }
+  .mnav li + li { border-top: 1px solid var(--line-dark); }
+  .mnav li a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 2px; font-size: 17px; font-weight: 600; line-height: 1.3; }
+  .mnav li a::after { content: ""; flex: none; width: 7px; height: 7px; margin-right: 6px; border-top: 2px solid currentColor; border-right: 2px solid currentColor; transform: rotate(45deg); opacity: .35; }
+  .mnav li a.on { color: var(--amber); }
+  .mnav li a.on::after { opacity: 1; }
+  .mnav-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0 18px; border-top: 1px solid var(--line-dark); }
+  .mnav-phone { line-height: 1.25; }
+  .mnav-phone span { display: block; font-size: 17px; font-weight: 700; white-space: nowrap; }
+  .mnav-phone small { font-size: 12.5px; color: var(--on-dark-muted); }
+  .nav-shade { display: block; position: fixed; inset: 0; z-index: 49; background: rgba(8, 6, 4, .6);
+    opacity: 0; visibility: hidden; transition: opacity .18s, visibility 0s .18s; }
+  .menu-open + .nav-shade { opacity: 1; visibility: visible; transition: opacity .18s; }
+  html.menu-lock { overflow: hidden; }   /* только html: если запереть и body, шапка перестаёт быть закреплённой */
 }
 /* первый экран на планшете и телефоне — ровно в высоту экрана: сверху фото занимает всё свободное место
    (баня по центру, не шире экрана), снизу заголовок, кнопки, цена и цифры. На низких экранах прячется
@@ -606,6 +638,7 @@ footer .logo { color: var(--on-dark); }
   body { font-size: 16px; }
   .wrap { padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
   .top-in { height: 64px; gap: 12px; }
+  .top-cta { gap: 8px; }
   .top-phone, .logo small { display: none; }
   .hero { --G: max(18px, env(safe-area-inset-left, 0px)); --GR: max(18px, env(safe-area-inset-right, 0px)); margin-top: -64px; }
   .hero-card { max-width: none; }
