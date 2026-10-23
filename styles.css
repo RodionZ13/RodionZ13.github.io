@@ -842,7 +842,11 @@ footer .logo { color: var(--on-dark); }
   /* первый экран: баня чуть меньше и ниже, чтобы над крышей было небо для пара (как на компьютере).
      Те же формулы, что в мобильном блоке выше: фото 4340×1564, центр бани — 54,72% / 58,59% кадра, баня — 65,5% высоты. */
   .hero-bg { --ih: min(100cqh, 92cqw); top: calc(50cqh + 52px - var(--ih) * .5859); }
-  .hero-smoke { --roof: calc(50cqh + 52px - .3275 * min(100cqh, 92cqw)); opacity: 1; }  /* первый экран: без карточки модели */
+  /* пар — только между шапкой и крышей: выше 62px (под шапкой) не виден, к линии крыши (50% слоя) тает */
+  .hero-smoke { --roof: calc(50cqh + 52px - .3275 * min(100cqh, 92cqw)); opacity: 1;
+    --fade-y: linear-gradient(180deg, transparent 0, transparent 62px, #000 104px, #000 calc(50% - 46px), transparent calc(50% - 6px)); }
+  /* шапка на телефоне всегда тёмная, даже над фото — чтобы логотип и кнопка читались */
+  .top.over { background: rgba(22, 16, 12, .88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom-color: var(--line-dark); }  /* первый экран: без карточки модели */
   .hero-card { display: none; }
   /* «за один день» — мелким подзаголовком под «баня на вашем участке» */
   .h1-tail { display: block; margin-top: 4px; font-size: .62em; font-weight: 600; letter-spacing: 0; color: var(--amber); }
